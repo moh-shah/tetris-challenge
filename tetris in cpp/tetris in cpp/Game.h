@@ -1,18 +1,20 @@
 #pragma once
+#include "input_handler.h"
 #include "Renderer.h"
 #include "world_representation.h"
 
-class Game
+class game
 {
 
 public:
 	world_representation world;
-	Game();
+	game();
 	void start();
- 
+	void move_flying_tetromino_if_key_pressed();
 
 private:
 	int thick_in_milliseconds_ = 200;
-	Renderer renderer_;
+	renderer renderer_;
+	input_handler input_handler_;
 	void update();
 };

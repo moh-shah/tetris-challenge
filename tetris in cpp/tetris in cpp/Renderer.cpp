@@ -1,9 +1,9 @@
-#include "Renderer.h"
+#include "renderer.h"
 #include "SDL.h"
 
 SDL_Renderer* sdl_renderer;
 
-void Renderer::init(world_representation world)
+void renderer::init(world_representation world)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	SDL_Window* window = SDL_CreateWindow("Tetris Challenge",
@@ -16,7 +16,7 @@ void Renderer::init(world_representation world)
 	sdl_renderer = SDL_CreateRenderer(window, -1, 0);
 }
 
-void Renderer::draw_world(world_representation world)
+void renderer::draw_world(world_representation world)
 {
 	SDL_RenderClear(sdl_renderer);
 	SDL_SetRenderDrawColor(sdl_renderer, 255, 255, 255, 255);
@@ -37,12 +37,12 @@ void Renderer::draw_world(world_representation world)
 }
 
 
-void Renderer::delay(int thick_in_milliseconds)
+void renderer::delay(int thick_in_milliseconds)
 {
 	SDL_Delay(thick_in_milliseconds);
 }
 
-void Renderer::fill_cell(int x, int y)
+void renderer::fill_cell(int x, int y)
 {
 	SDL_Rect rect;
 	rect.h = cell_size;

@@ -1,6 +1,6 @@
 #pragma once
 #include "world_representation.h"
-class Renderer
+class renderer
 {
 public:
 	void init(world_representation world);

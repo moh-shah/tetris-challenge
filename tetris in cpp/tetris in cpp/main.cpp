@@ -1,9 +1,9 @@
-#include "Game.h"
+#include "game.h"
  
 int main(int argc, char *argv[])
 {
-	auto game = Game();
-	game.start();
+	auto game_instance = game();
+	game_instance.start();
 
 	return 0;
 }
