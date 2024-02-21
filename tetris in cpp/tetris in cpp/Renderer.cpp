@@ -9,8 +9,8 @@ void Renderer::init(world_representation world)
 	SDL_Window* window = SDL_CreateWindow("Tetris Challenge",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
-		world.width * cell_size,
-		world.height * cell_size,
+		world.width * cell_size + grid_margine_x*2,
+		world.height * cell_size + grid_margine_y*2,
 		SDL_WINDOW_SHOWN
 	);
 	sdl_renderer = SDL_CreateRenderer(window, -1, 0);
@@ -47,7 +47,7 @@ void Renderer::fill_cell(int x, int y)
 	SDL_Rect rect;
 	rect.h = cell_size;
 	rect.w = cell_size;
-	rect.x = x*cell_size;
-	rect.y = y*cell_size;
+	rect.x = grid_margine_x + x*cell_size;
+	rect.y = grid_margine_y + y*cell_size;
 	SDL_RenderDrawRect(sdl_renderer, &rect);
 }

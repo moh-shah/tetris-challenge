@@ -12,7 +12,7 @@ public:
  
 
 private:
-	int thick_in_milliseconds_ = 15;
+	int thick_in_milliseconds_ = 200;
 	Renderer renderer_;
 	void update();
 };
