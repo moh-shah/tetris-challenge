@@ -5,7 +5,6 @@ class renderer
 public:
 	void init(world_representation world);
 	void draw_world(world_representation world);
-	void delay(int thick_in_milliseconds);
 
 private:
 	const int cell_size = 35;

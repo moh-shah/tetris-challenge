@@ -1,24 +1,46 @@
 #include "input_handler.h"
-
+#include <iostream>
 #include <SDL_events.h>
 
 SDL_Event key_press_event;
 
-void input_handler::read_and_cache_input_key()
+void input_handler::clear_buffer()
 {
-	if (SDL_PollEvent(&key_press_event) && key_press_event.type == SDL_KEYDOWN)
-	{
-		key_left_pressed_last_frame = key_press_event.key.keysym.sym == SDLK_LEFT;
-		key_right_pressed_last_frame = key_press_event.key.keysym.sym == SDLK_RIGHT;
-		key_up_pressed_last_frame = key_press_event.key.keysym.sym == SDLK_UP;
-		key_down_pressed_last_frame = key_press_event.key.keysym.sym == SDLK_DOWN;
-	}	
+	while (!key_q.empty()) {
+		key_q.pop();
+	}
 }
 
-void input_handler :: clear_cached_keys()
+void input_handler::read_and_cache_input_key()
 {
-	key_down_pressed_last_frame = false;
-	key_up_pressed_last_frame = false;
-	key_left_pressed_last_frame = false;
-	key_right_pressed_last_frame = false;
+	if (SDL_PollEvent(&key_press_event))
+	{
+		if (key_press_event.type == SDL_QUIT)
+		{
+			key_quit_pressed_last_frame = true;
+		}
+		if (key_press_event.type == SDL_KEYDOWN)
+		{
+			if (key_press_event.key.keysym.sym == SDLK_LEFT)
+			{
+				if (!key_q.empty() && key_q.front() == Right)
+					clear_buffer();
+				
+				key_q.push(Left);
+			}
+			else if (key_press_event.key.keysym.sym == SDLK_RIGHT)
+			{
+				if (!key_q.empty() && key_q.front() == Left)
+					clear_buffer();
+
+				key_q.push(Right);
+			}
+			
+			key_quit_pressed_last_frame = key_press_event.key.keysym.sym == SDLK_ESCAPE;
+
+			std::cout << "key pressed: " << key_press_event.key.keysym.sym <<"\n";
+		}
+	}
+ 
 }
+ 

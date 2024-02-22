@@ -42,10 +42,18 @@ bool world_representation::can_move_tetromino(
 }
 
 
+void world_representation::put_tetromino_on_grid(tetromino* tetromino)
+{
+	for (vector<short> element : tetromino->get_positions())
+	{
+		grid[element[0]][element[1]] = true;
+	}
+}
+
 tetromino world_representation::put_tetromino_on(
 	tetromino *tetromino, short x, short y)
 {
-	tetromino->shift_positions(x, y);
+	tetromino->shift_block_positions(x, y);
 	for (vector<short> element : tetromino->get_positions())
 	{
 		grid[element[0]][element[1]] = true;

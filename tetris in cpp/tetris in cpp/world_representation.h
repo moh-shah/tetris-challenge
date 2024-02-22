@@ -16,7 +16,7 @@ public:
 		return positions_;
 	}
 
-	void shift_positions(short x, short y)
+	void shift_block_positions(short x, short y)
 	{
 		for (int i = 0; i < positions_.size(); i++)
 		{
@@ -147,6 +147,7 @@ public:
 
 	bool can_move_tetromino(tetromino tetromino, short diff_x, short diff_y);
 	tetromino put_tetromino_on(tetromino *tetromino, short x, short y);
+	void put_tetromino_on_grid(tetromino *tetromino);
 	void clear_tetromino_from_grid(tetromino tetromino);
 	void fill_cell(int x, int y);
 	void clear_cell(int x, int y);

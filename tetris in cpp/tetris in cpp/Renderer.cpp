@@ -36,12 +36,6 @@ void renderer::draw_world(world_representation world)
 	SDL_RenderPresent(sdl_renderer);
 }
 
-
-void renderer::delay(int thick_in_milliseconds)
-{
-	SDL_Delay(thick_in_milliseconds);
-}
-
 void renderer::fill_cell(int x, int y)
 {
 	SDL_Rect rect;
