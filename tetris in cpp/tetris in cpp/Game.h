@@ -18,4 +18,6 @@ private:
 	void update();
 	void process_inputs();
 	void handle_gravity();
+	void spawn_tetromino();
+	tetromino generate_random_tetromino();
 };

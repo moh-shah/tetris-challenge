@@ -1,16 +1,20 @@
 #pragma once
 #include <iostream>
 #include <vector>
- 
+
 using namespace std;
 
 
-
+enum tetromino_type
+{
+	l,t,s,z,j,o,i,last
+};
 
 struct tetromino
 {
 public:
-
+	tetromino_type type;
+	bool is_landed=false;
 	vector<vector<short>> get_positions()
 	{
 		return positions_;
@@ -29,13 +33,18 @@ protected:
 	vector<vector<short>> positions_;
 };
 
+struct null_tetromino : tetromino
+{
+public:
+	null_tetromino()
+	{
+		type = last;
+	}
+};
+
 struct tetromino_L : tetromino
 {
 public:
-	/*~tetromino_L() override
-	{
-		delete &positions_;
-	}*/
 	tetromino_L()
 	{
 		positions_= {
@@ -44,6 +53,7 @@ public:
 		vector<short>{1,0},
 		vector<short>{1,1}
 		};
+		type = l;
 	}
 	
 };
@@ -59,6 +69,7 @@ public:
 		vector<short>{1,0},
 		vector<short>{0,1}
 		};
+		type = t;
 	}
 };
 
@@ -73,6 +84,7 @@ public:
 		vector<short>{0,1},
 		vector<short>{1,1}
 		};
+		type = s;
 	}
 };
 
@@ -85,8 +97,9 @@ public:
 		vector<short>{-1,1},
 		vector<short>{0,1},
 		vector<short>{0,0},
-		vector<short>{0,1}
+		vector<short>{1,0}
 		};
+		type = z;
 	}
 };
 
@@ -102,6 +115,7 @@ public:
 		vector<short>{0,0},
 		vector<short>{1,0}
 		};
+		type = j;
 	}
 };
 
@@ -116,6 +130,7 @@ public:
 		vector<short>{1,0},
 		vector<short>{0,0}
 		};
+		type = o;
 	}
 };
 
@@ -130,6 +145,7 @@ public:
 		vector<short>{1,0},
 		vector<short>{2,0}
 		};
+		type = i;
 	}
 };
 
