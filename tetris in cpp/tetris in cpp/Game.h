@@ -13,7 +13,6 @@ public:
 	void start();
 
 private:
-	int thick_in_milliseconds_ = 1000;
 	renderer renderer_;
 	input_handler input_handler_;
 	void update();

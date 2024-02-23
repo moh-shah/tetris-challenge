@@ -12,7 +12,7 @@ const milliseconds desired_frame_time(33);//for 330 fps
 time_point<steady_clock> last_state_update_time;
 milliseconds game_state_update_duration(1000);
 
-game::game(): world(10, 20), input_handler_()
+game::game(): world(10, 24), input_handler_()
 {
 	renderer_.init(world);
 }
@@ -20,7 +20,7 @@ game::game(): world(10, 20), input_handler_()
 void game::start()
 {
 	flying_tetromino = tetromino_I();
-	world.put_tetromino_on(&flying_tetromino, 2, 2);
+	world.put_tetromino_on(&flying_tetromino, 2, 0);
 
 	update();
 }
