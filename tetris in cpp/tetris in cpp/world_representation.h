@@ -20,7 +20,7 @@ public:
 		return positions_;
 	}
 
-	void shift_block_positions(short x, short y)
+	void shift_block_positions(const short x, const short y)
 	{
 		for (int i = 0; i < positions_.size(); i++)
 		{
@@ -29,8 +29,36 @@ public:
 		}
 	}
 
+	void rotate(const bool clockwise)
+	{
+		//clockwise
+		//new x = x*cos(90) - y*sin(90) = -y
+		//new y = x*sin(90) + y*cos(90) = x
+
+		const short direction_sign = clockwise ? 1 : -1;
+		const auto init_pivot = positions_[pivot_index_];
+		for (auto& position : positions_)
+		{
+			const auto init_x = position[0];
+			const auto init_y = position[1];
+			position[0] = -init_y * direction_sign;
+			position[1] = init_x * direction_sign;
+		}
+
+		const auto new_pivot = positions_[pivot_index_];
+		const auto diff_x = new_pivot[0] - init_pivot[0];
+		const auto diff_y = new_pivot[1] - init_pivot[1];
+		for (auto& position : positions_)
+		{
+			position[0] -= diff_x;
+			position[1] -= diff_y;
+		}
+
+	}
+
 protected:
 	vector<vector<short>> positions_;
+	int pivot_index_ = 0;
 };
 
 struct null_tetromino : tetromino
@@ -54,6 +82,7 @@ public:
 		vector<short>{1,1}
 		};
 		type = l;
+		pivot_index_ = 1;
 	}
 	
 };
@@ -70,6 +99,7 @@ public:
 		vector<short>{0,1}
 		};
 		type = t;
+		pivot_index_ = 1;
 	}
 };
 
@@ -85,6 +115,7 @@ public:
 		vector<short>{1,1}
 		};
 		type = s;
+		pivot_index_ = 1;
 	}
 };
 
@@ -100,6 +131,7 @@ public:
 		vector<short>{1,0}
 		};
 		type = z;
+		pivot_index_ = 2;
 	}
 };
 
@@ -116,6 +148,7 @@ public:
 		vector<short>{1,0}
 		};
 		type = j;
+		pivot_index_ = 2;
 	}
 };
 
@@ -131,6 +164,7 @@ public:
 		vector<short>{0,0}
 		};
 		type = o;
+		pivot_index_ = 3;
 	}
 };
 
@@ -146,6 +180,7 @@ public:
 		vector<short>{2,0}
 		};
 		type = i;
+		pivot_index_ = 1;
 	}
 };
 
@@ -161,9 +196,8 @@ public:
 
 	world_representation(int w, int h);
 
-	bool can_move_tetromino(tetromino tetromino, short diff_x, short diff_y);
-	tetromino put_tetromino_on(tetromino *tetromino, short x, short y);
-	void put_tetromino_on_grid(tetromino *tetromino);
+	bool is_position_valid(tetromino tetromino, short diff_x, short diff_y);
+	void put_tetromino_on_grid(tetromino tetromino);
 	void clear_tetromino_from_grid(tetromino tetromino);
 	void fill_cell(int x, int y);
 	void clear_cell(int x, int y);

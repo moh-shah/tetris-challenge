@@ -20,7 +20,7 @@ world_representation::world_representation(const int w, const int h)
 
 }
 
-bool world_representation::can_move_tetromino(
+bool world_representation::is_position_valid(
 	tetromino tetromino, short diff_x, short diff_y)
 {
 	for (vector<short> element : tetromino.get_positions())
@@ -42,32 +42,16 @@ bool world_representation::can_move_tetromino(
 }
 
 
-void world_representation::put_tetromino_on_grid(tetromino* tetromino)
-{
-	for (vector<short> element : tetromino->get_positions())
-	{
-		grid[element[0]][element[1]] = true;
-	}
-}
-
-tetromino world_representation::put_tetromino_on(
-	tetromino *tetromino, short x, short y)
-{
-	tetromino->shift_block_positions(x, y);
-	for (vector<short> element : tetromino->get_positions())
-	{
-		grid[element[0]][element[1]] = true;
-	}
-	return *tetromino;
-}
-
-void world_representation::clear_tetromino_from_grid(
-	tetromino tetromino)
+void world_representation::put_tetromino_on_grid(tetromino tetromino)
 {
 	for (vector<short> element : tetromino.get_positions())
-	{
+		grid[element[0]][element[1]] = true;
+}
+
+void world_representation::clear_tetromino_from_grid(tetromino tetromino)
+{
+	for (vector<short> element : tetromino.get_positions())
 		grid[element[0]][element[1]] = false;
-	}
 }
 
 

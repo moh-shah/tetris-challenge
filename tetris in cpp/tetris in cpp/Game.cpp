@@ -50,7 +50,7 @@ void game::update()
 				world.clear_tetromino_from_grid(flying_tetromino);
 				process_inputs();
 				handle_gravity();
-				world.put_tetromino_on_grid(&flying_tetromino);
+				world.put_tetromino_on_grid(flying_tetromino);
 				renderer_.draw_world(world);
 				last_state_update_time = now;
 			}
@@ -64,13 +64,14 @@ void game::update()
 void game::handle_gravity()
 {
 	cout << "is flying tetromino landed: " << std::boolalpha << flying_tetromino.is_landed <<"\n";
-	if (world.can_move_tetromino(flying_tetromino, 0, 1))
+	if (world.is_position_valid(flying_tetromino, 0, 1))
 	{
 		flying_tetromino.shift_block_positions(0, 1);
 	}
 	else
 	{
 		flying_tetromino.is_landed = true;
+		input_handler_.clear_buffer();
 	}
 }
 
@@ -84,16 +85,24 @@ void game::process_inputs()
 
 	if (peek == Right)
 	{
-		if (world.can_move_tetromino(flying_tetromino, 1, 0))
+		if (world.is_position_valid(flying_tetromino, 1, 0))
 		{
 			flying_tetromino.shift_block_positions(1, 0);
 		}
 	}
 	else if (peek == Left)
 	{
-		if (world.can_move_tetromino(flying_tetromino, -1, 0))
+		if (world.is_position_valid(flying_tetromino, -1, 0))
 		{
 			flying_tetromino.shift_block_positions(-1, 0);
+		}
+	}
+	else if (peek == Up)
+	{
+		flying_tetromino.rotate(true);
+		if (world.is_position_valid(flying_tetromino,0,0) == false)
+		{
+			flying_tetromino.rotate(false);
 		}
 	}
 	input_handler_.key_q.pop();
@@ -129,8 +138,6 @@ tetromino game::generate_random_tetromino()
 			tetromino1 = tetromino_O();
 			break;
 		case i:
-			tetromino1 = tetromino_I();
-			break;
 		default:
 			tetromino1 = tetromino_I();
 		break;
@@ -143,8 +150,9 @@ void game::spawn_tetromino()
 	if (flying_tetromino.type == last || flying_tetromino.is_landed)
 	{
 		flying_tetromino = generate_random_tetromino();
-		world.put_tetromino_on(&flying_tetromino, world.width / 2, 2);
+		flying_tetromino.shift_block_positions(world.width / 2, 2);
+		world.put_tetromino_on_grid(flying_tetromino);
+		//world.shift_position_and_put_tetromino_on_grid(&flying_tetromino, world.width / 2, 2);
 		cout << "tetromino spawned: " << flying_tetromino.type;
-
 	}
 }
