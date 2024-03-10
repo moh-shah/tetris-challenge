@@ -10,6 +10,8 @@ tetromino flying_tetromino = null_tetromino();
 tetromino next_tetromino = null_tetromino();
 
 bool exit_game_loop;
+bool row_cleared_in_last_update;
+vector<short> cleared_rows;
 
 //game frame-rate
 time_point<steady_clock> last_frame_time;
@@ -17,7 +19,7 @@ const milliseconds desired_frame_time(33);//for 330 fps
 
 //tetris update-state delay
 time_point<steady_clock> last_state_update_time;
-milliseconds game_state_update_duration(1000);
+milliseconds game_state_update_duration(200);
 
 game::game(): world(10, 24), input_handler_()
 {
@@ -44,13 +46,34 @@ void game::update()
 		{
 			if (duration_cast<milliseconds>(now - last_state_update_time) >= game_state_update_duration)
 			{
-				spawn_tetromino();
+				if (row_cleared_in_last_update)
+				{
+					for (int i = cleared_rows.size() - 1; i >= 0; --i)
+					{
+						const auto row = cleared_rows[i];
+						cout << "\n clearing row: " << row << "\n";
+						world.free_row_and_shift_upper_rows_down(row);
+					}
+					cleared_rows.clear();
+					row_cleared_in_last_update = false;
+				}
+				else
+				{
+					spawn_tetromino();
 
-				//update game state
-				world.clear_tetromino_from_grid(flying_tetromino);
-				process_inputs();
-				handle_gravity();
-				world.put_tetromino_on_grid(flying_tetromino);
+					//update game state
+					world.clear_tetromino_from_grid(flying_tetromino);
+					process_inputs();
+					handle_gravity();
+					world.put_tetromino_on_grid(flying_tetromino);
+
+					if (flying_tetromino.is_landed)
+					{
+						cleared_rows = world.get_unique_and_sorted_rows_filled_by_tetromino(flying_tetromino);
+						row_cleared_in_last_update = !cleared_rows.empty();
+					}
+				}
+
 				renderer_.draw_world(world);
 				last_state_update_time = now;
 			}
@@ -81,43 +104,34 @@ void game::process_inputs()
 		return;
 
 	const auto peek = input_handler_.key_q.front();
-
-
 	if (peek == Right)
 	{
 		if (world.is_position_valid(flying_tetromino, 1, 0))
-		{
 			flying_tetromino.shift_block_positions(1, 0);
-		}
 	}
 	else if (peek == Left)
 	{
 		if (world.is_position_valid(flying_tetromino, -1, 0))
-		{
 			flying_tetromino.shift_block_positions(-1, 0);
-		}
 	}
 	else if (peek == Up)
 	{
 		flying_tetromino.rotate(true);
 		if (world.is_position_valid(flying_tetromino,0,0) == false)
-		{
 			flying_tetromino.rotate(false);
-		}
 	}
+
 	input_handler_.key_q.pop();
 	if (input_handler_.key_quit_pressed_last_frame)
-	{
 		exit_game_loop = true;
-	}
 }
 
 tetromino game::generate_random_tetromino()
 {
 	tetromino tetromino1;
-	auto rnd = rand();
+	const auto rnd = rand();
 	cout << "random generated number: " << rnd;
-	auto random_type = static_cast<tetromino_type>(rnd % last);
+	const auto random_type = static_cast<tetromino_type>(rnd % last);
 	switch (random_type) {
 		case l:
 			tetromino1 = tetromino_L();
@@ -152,7 +166,6 @@ void game::spawn_tetromino()
 		flying_tetromino = generate_random_tetromino();
 		flying_tetromino.shift_block_positions(world.width / 2, 2);
 		world.put_tetromino_on_grid(flying_tetromino);
-		//world.shift_position_and_put_tetromino_on_grid(&flying_tetromino, world.width / 2, 2);
 		cout << "tetromino spawned: " << flying_tetromino.type;
 	}
 }

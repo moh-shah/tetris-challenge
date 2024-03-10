@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <unordered_set>
 #include <vector>
 
 using namespace std;
@@ -201,4 +202,7 @@ public:
 	void clear_tetromino_from_grid(tetromino tetromino);
 	void fill_cell(int x, int y);
 	void clear_cell(int x, int y);
+	vector<short> get_unique_and_sorted_rows_filled_by_tetromino(tetromino tetromino);
+	bool is_row_filled(int y);
+	void free_row_and_shift_upper_rows_down(int y);
 };
