@@ -1,7 +1,7 @@
 #pragma once
 #include <queue>
 
-enum key_code { Right, Left };
+enum key_code { Right, Left, Up };
 
 class input_handler
 {

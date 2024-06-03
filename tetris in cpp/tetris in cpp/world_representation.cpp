@@ -1,4 +1,7 @@
 #include "world_representation.h"
+
+#include <algorithm>
+#include <unordered_set>
 #include <vector>
 
 using namespace std;
@@ -20,13 +23,13 @@ world_representation::world_representation(const int w, const int h)
 
 }
 
-bool world_representation::can_move_tetromino(
-	tetromino tetromino, short diff_x, short diff_y)
+bool world_representation::is_position_valid(
+	tetromino tetromino, const short diff_x, const short diff_y)
 {
-	for (vector<short> element : tetromino.get_positions())
+	for (vector<short> pos : tetromino.get_positions())
 	{
-		auto next_x_value = element[0] += diff_x;
-		auto next_y_value = element[1] += diff_y;
+		auto next_x_value = pos[0] += diff_x;
+		auto next_y_value = pos[1] += diff_y;
 
 		if (next_x_value < 0 || next_x_value >= width)
 			return false;
@@ -42,32 +45,16 @@ bool world_representation::can_move_tetromino(
 }
 
 
-void world_representation::put_tetromino_on_grid(tetromino* tetromino)
-{
-	for (vector<short> element : tetromino->get_positions())
-	{
-		grid[element[0]][element[1]] = true;
-	}
-}
-
-tetromino world_representation::put_tetromino_on(
-	tetromino *tetromino, short x, short y)
-{
-	tetromino->shift_block_positions(x, y);
-	for (vector<short> element : tetromino->get_positions())
-	{
-		grid[element[0]][element[1]] = true;
-	}
-	return *tetromino;
-}
-
-void world_representation::clear_tetromino_from_grid(
-	tetromino tetromino)
+void world_representation::put_tetromino_on_grid(tetromino tetromino)
 {
 	for (vector<short> element : tetromino.get_positions())
-	{
-		grid[element[0]][element[1]] = false;
-	}
+		grid[element[0]][element[1]] = true;
+}
+
+void world_representation::clear_tetromino_from_grid(tetromino tetromino)
+{
+	for (vector<short> pos : tetromino.get_positions())
+		grid[pos[0]][pos[1]] = false;
 }
 
 
@@ -79,4 +66,42 @@ void world_representation::fill_cell(int x, int y)
 void world_representation::clear_cell(int x, int y)
 {
 	grid[x][y] = false;
+}
+
+vector<short> world_representation::get_unique_and_sorted_rows_filled_by_tetromino(tetromino tetromino)
+{
+	auto filled_rows = vector<short>();
+	for (vector<short> pos : tetromino.get_positions())
+	{
+		if (count(filled_rows.begin(),filled_rows.end(),pos[1]))
+			continue;
+		
+		if (is_row_filled(pos[1]))
+			filled_rows.push_back(pos[1]);
+	}
+	sort(filled_rows.begin(), filled_rows.end());
+	return filled_rows;
+}
+
+bool world_representation::is_row_filled(const int y)
+{
+	for (int i = 0; i < width; ++i)
+		if (grid[i][y] == false)
+			return false;
+
+	return true;
+}
+
+void world_representation::free_row_and_shift_upper_rows_down(const int row)
+{
+	for (int y = row; y > 0; --y)
+	{
+		for (int x = 0; x < width; ++x)
+		{
+			if (y>1)
+				grid[x][y] = grid[x][y-1];
+			else 
+				grid[x][y] = false;
+		}
+	}
 }

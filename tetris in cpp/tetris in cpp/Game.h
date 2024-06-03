@@ -13,10 +13,11 @@ public:
 	void start();
 
 private:
-	int thick_in_milliseconds_ = 1000;
 	renderer renderer_;
 	input_handler input_handler_;
 	void update();
 	void process_inputs();
 	void handle_gravity();
+	void spawn_tetromino();
+	tetromino generate_random_tetromino();
 };
