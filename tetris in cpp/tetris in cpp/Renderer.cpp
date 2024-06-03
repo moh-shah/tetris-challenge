@@ -4,6 +4,7 @@
 SDL_Renderer* sdl_renderer;
 int invisible_height_margin = 4;
 int renderable_height;
+SDL_Rect drawing_rct;
 
 void renderer::init(world_representation world)
 {
@@ -36,10 +37,7 @@ void renderer::draw_world(world_representation world)
 	{
 		for (int x = 0; x < world.width; x++)
 		{
-			if (world.grid[x][y])
-			{
-				fill_cell(x, y- invisible_height_margin);
-			}
+			draw_cell(x, y - invisible_height_margin, world.grid[x][y]);
 		}
 	}
 
@@ -47,12 +45,52 @@ void renderer::draw_world(world_representation world)
 	SDL_RenderPresent(sdl_renderer);
 }
 
-void renderer::fill_cell(int x, int y)
+void renderer::get_color(world_cell cell, int& color_r, int& color_g, int& color_b)
 {
-	SDL_Rect rect;
-	rect.h = cell_size;
-	rect.w = cell_size;
-	rect.x = grid_margine_x + x*cell_size;
-	rect.y = grid_margine_y + y*cell_size;
-	SDL_RenderDrawRect(sdl_renderer, &rect);
+	color_r = 0;
+	color_g = 0;
+	color_b = 0;
+	switch (cell.color)
+	{
+	case red:
+		color_r = 255;
+		break;
+
+	case blue:
+		color_b = 255;
+		break;
+
+	case green:
+		color_g = 255;
+		break;
+
+	case yellow:
+		color_r = 255;
+		color_g = 255;
+		break;
+	}
+}
+
+void renderer::draw_cell(const int x, const int y, world_cell cell)
+{
+	if (cell.filled)
+	{
+		SDL_SetRenderDrawColor(sdl_renderer, 255, 255, 255, 255);
+		drawing_rct.h = cell_size;
+		drawing_rct.w = cell_size;
+		drawing_rct.x = grid_margine_x + x*cell_size;
+		drawing_rct.y = grid_margine_y + y*cell_size;
+		SDL_RenderDrawRect(sdl_renderer, &drawing_rct);
+
+		int color_r;
+		int color_g;
+		int color_b;
+		get_color(cell, color_r, color_g, color_b);
+		SDL_SetRenderDrawColor(sdl_renderer, color_r, color_g, color_b, 255);
+		drawing_rct.h -= cell_border_thickness*2;
+		drawing_rct.w -= cell_border_thickness*2;
+		drawing_rct.x += cell_border_thickness;
+		drawing_rct.y += cell_border_thickness;
+		SDL_RenderFillRect(sdl_renderer, &drawing_rct);
+	}
 }

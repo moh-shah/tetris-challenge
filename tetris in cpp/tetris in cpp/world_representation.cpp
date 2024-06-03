@@ -13,10 +13,13 @@ world_representation::world_representation(const int w, const int h)
 	grid.reserve(w);
 	for (int x = 0; x < w; x++)
 	{
-		vector<bool> col;
+		vector<world_cell> col;
 		col.reserve(h);
 		for (int i=0;i < h;i++)
-			col.push_back(false);
+		{
+			col.push_back(world_cell());
+
+		}
 		
 		grid.push_back(col);
 	}
@@ -37,7 +40,7 @@ bool world_representation::is_position_valid(
 		if (next_y_value < 0 || next_y_value >= height)
 			return false;
 
-		if (grid[next_x_value][next_y_value])
+		if (grid[next_x_value][next_y_value].filled)
 			return false;
 	}
 
@@ -48,24 +51,27 @@ bool world_representation::is_position_valid(
 void world_representation::put_tetromino_on_grid(tetromino tetromino)
 {
 	for (vector<short> element : tetromino.get_positions())
-		grid[element[0]][element[1]] = true;
+	{
+		grid[element[0]][element[1]].filled = true;
+		grid[element[0]][element[1]].color = tetromino.color;
+	}
 }
 
 void world_representation::clear_tetromino_from_grid(tetromino tetromino)
 {
 	for (vector<short> pos : tetromino.get_positions())
-		grid[pos[0]][pos[1]] = false;
+		grid[pos[0]][pos[1]].filled = false;
 }
 
 
 void world_representation::fill_cell(int x, int y)
 {
-	grid[x][y] = true;
+	grid[x][y].filled = true;
 }
 
 void world_representation::clear_cell(int x, int y)
 {
-	grid[x][y] = false;
+	grid[x][y].filled = false;
 }
 
 vector<short> world_representation::get_unique_and_sorted_rows_filled_by_tetromino(tetromino tetromino)
@@ -86,7 +92,7 @@ vector<short> world_representation::get_unique_and_sorted_rows_filled_by_tetromi
 bool world_representation::is_row_filled(const int y)
 {
 	for (int i = 0; i < width; ++i)
-		if (grid[i][y] == false)
+		if (grid[i][y].filled == false)
 			return false;
 
 	return true;
@@ -101,7 +107,7 @@ void world_representation::free_row_and_shift_upper_rows_down(const int row)
 			if (y>1)
 				grid[x][y] = grid[x][y-1];
 			else 
-				grid[x][y] = false;
+				grid[x][y].filled = false;
 		}
 	}
 }

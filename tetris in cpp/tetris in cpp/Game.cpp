@@ -6,8 +6,8 @@ using namespace chrono;
 
 
 
-tetromino flying_tetromino = null_tetromino();
-tetromino next_tetromino = null_tetromino();
+tetromino flying_tetromino = null_tetromino(last_color);
+tetromino next_tetromino = null_tetromino(last_color);
 
 bool exit_game_loop;
 bool row_cleared_in_last_update;
@@ -132,28 +132,29 @@ tetromino game::generate_random_tetromino()
 	const auto rnd = rand();
 	cout << "random generated number: " << rnd;
 	const auto random_type = static_cast<tetromino_type>(rnd % last);
+	const auto random_color = static_cast<tetromino_color>(rnd % last_color);
 	switch (random_type) {
 		case l:
-			tetromino1 = tetromino_L();
+			tetromino1 = tetromino_L(random_color);
 			break;
 		case t:
-			tetromino1 = tetromino_T();
+			tetromino1 = tetromino_T(random_color);
 			break;
 		case s:
-			tetromino1 = tetromino_S();
+			tetromino1 = tetromino_S(random_color);
 			break;
 		case z:
-			tetromino1 = tetromino_Z();
+			tetromino1 = tetromino_Z(random_color);
 			break;
 		case j:
-			tetromino1 = tetromino_J();
+			tetromino1 = tetromino_J(random_color);
 			break;
 		case o:
-			tetromino1 = tetromino_O();
+			tetromino1 = tetromino_O(random_color);
 			break;
 		case i:
 		default:
-			tetromino1 = tetromino_I();
+			tetromino1 = tetromino_I(random_color);
 		break;
 	}
 	return tetromino1;

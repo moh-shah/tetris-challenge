@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <SDL_stdinc.h>
 #include <unordered_set>
 #include <vector>
 
@@ -11,11 +12,24 @@ enum tetromino_type
 	l,t,s,z,j,o,i,last
 };
 
+enum tetromino_color
+{
+	green, blue, red, yellow, last_color
+};
+
 struct tetromino
 {
 public:
 	tetromino_type type;
 	bool is_landed=false;
+	tetromino_color color;
+
+	tetromino(){}
+	tetromino(tetromino_color initColor)
+	{
+		color = initColor;
+	}
+
 	vector<vector<short>> get_positions()
 	{
 		return positions_;
@@ -65,7 +79,7 @@ protected:
 struct null_tetromino : tetromino
 {
 public:
-	null_tetromino()
+	null_tetromino(const tetromino_color init_color) : tetromino(init_color)
 	{
 		type = last;
 	}
@@ -74,7 +88,7 @@ public:
 struct tetromino_L : tetromino
 {
 public:
-	tetromino_L()
+	tetromino_L(const tetromino_color init_color) : tetromino(init_color)
 	{
 		positions_= {
 		vector<short>{-1,0},
@@ -91,7 +105,7 @@ public:
 struct tetromino_T : tetromino
 {
 public:
-	tetromino_T()
+	tetromino_T(const tetromino_color init_color) : tetromino(init_color)
 	{
 		positions_ = {
 		vector<short>{-1,0},
@@ -107,7 +121,7 @@ public:
 struct tetromino_S : tetromino
 {
 public:
-	tetromino_S()
+	tetromino_S(const tetromino_color init_color) : tetromino(init_color)
 	{
 		positions_ = {
 		vector<short>{-1,0},
@@ -123,7 +137,7 @@ public:
 struct tetromino_Z : tetromino
 {
 public:
-	tetromino_Z()
+	tetromino_Z(const tetromino_color init_color) : tetromino(init_color)
 	{
 		positions_ = {
 		vector<short>{-1,1},
@@ -140,7 +154,7 @@ public:
 struct tetromino_J : tetromino
 {
 public:
-	tetromino_J()
+	tetromino_J(const tetromino_color init_color) : tetromino(init_color)
 	{
 		positions_ = {
 		vector<short>{-1,1},
@@ -156,7 +170,7 @@ public:
 struct tetromino_O : tetromino
 {
 public:
-	tetromino_O()
+	tetromino_O(const tetromino_color init_color) : tetromino(init_color)
 	{
 		positions_ = {
 		vector<short>{0,1},
@@ -172,7 +186,7 @@ public:
 struct tetromino_I : tetromino
 {
 public:
-	tetromino_I()
+	tetromino_I(const tetromino_color init_color) : tetromino(init_color)
 	{
 		positions_ = {
 		vector<short>{-1,0},
@@ -186,6 +200,17 @@ public:
 };
 
 
+struct world_cell
+{
+public:
+	bool filled;
+	tetromino_color color;
+
+	world_cell()
+	{
+		filled = false;
+	}
+};
 
 struct world_representation
 {
@@ -193,7 +218,7 @@ public:
 	int width;
 	int height;
 
-	vector<vector<bool>> grid;
+	vector<vector<world_cell>> grid;
 
 	world_representation(int w, int h);
 
@@ -206,3 +231,5 @@ public:
 	bool is_row_filled(int y);
 	void free_row_and_shift_upper_rows_down(int y);
 };
+
+
