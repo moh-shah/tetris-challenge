@@ -1,2 +1,2 @@
 Hi there!
-I'm Mohammad and it's my personal challenge to write Tetris in as many languages, game engines, and frameworks as I can!
+On my way to re-learn C++, it's my version of Tetris in cpp
