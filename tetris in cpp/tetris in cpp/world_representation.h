@@ -81,7 +81,7 @@ struct null_tetromino : tetromino
 public:
 	null_tetromino(const tetromino_color init_color) : tetromino(init_color)
 	{
-		type = last;
+		type = tetromino_type::last;
 	}
 };
 
@@ -229,7 +229,7 @@ public:
 	void clear_cell(int x, int y);
 	vector<short> get_unique_and_sorted_rows_filled_by_tetromino(tetromino tetromino);
 	bool is_row_filled(int y);
-	void free_row_and_shift_upper_rows_down(int y);
+	void free_row_and_shift_upper_rows_down(int row);
 };
 
 

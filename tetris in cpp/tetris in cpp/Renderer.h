@@ -4,7 +4,11 @@ class renderer
 {
 public:
 	void init(world_representation world);
+	void begin_draw();
+	void end_draw();
+	void show_score(int score);
 	void draw_world(world_representation world);
+	void get_color_of_cell(world_cell cell, Uint8& color_r, Uint8& color_g, Uint8& color_b);
 
 private:
 	const int cell_size = 35;

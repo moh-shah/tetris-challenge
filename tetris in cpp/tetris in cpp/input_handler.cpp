@@ -45,7 +45,7 @@ void input_handler::read_and_cache_input_key()
 			
 			key_quit_pressed_last_frame = key_press_event.key.keysym.sym == SDLK_ESCAPE;
 
-			std::cout << "key pressed: " << key_press_event.key.keysym.sym <<"\n";
+			//std::cout << "key pressed: " << key_press_event.key.keysym.sym <<"\n";
 		}
 	}
  

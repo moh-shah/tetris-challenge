@@ -105,7 +105,7 @@ void world_representation::free_row_and_shift_upper_rows_down(const int row)
 		for (int x = 0; x < width; ++x)
 		{
 			if (y>1)
-				grid[x][y] = grid[x][y-1];
+				grid[x][y].filled = grid[x][y-1].filled;
 			else 
 				grid[x][y].filled = false;
 		}

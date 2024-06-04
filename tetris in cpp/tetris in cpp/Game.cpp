@@ -12,6 +12,7 @@ tetromino next_tetromino = null_tetromino(last_color);
 bool exit_game_loop;
 bool row_cleared_in_last_update;
 vector<short> cleared_rows;
+int score_ = 0;
 
 //game frame-rate
 time_point<steady_clock> last_frame_time;
@@ -21,6 +22,7 @@ const milliseconds desired_frame_time(33);//for 330 fps
 time_point<steady_clock> last_state_update_time;
 milliseconds game_state_update_duration(200);
 
+// This is a way to initialize member variables of a class directly in the constructor's parameter list.
 game::game(): world(10, 24), input_handler_()
 {
 	srand(time(0));
@@ -48,7 +50,9 @@ void game::update()
 			{
 				if (row_cleared_in_last_update)
 				{
-					for (int i = cleared_rows.size() - 1; i >= 0; --i)
+					score_ += cleared_rows.size();
+					//for (int i = cleared_rows.size() - 1; i >= 0; --i)
+					for (int i = 0; i < cleared_rows.size(); i++)
 					{
 						const auto row = cleared_rows[i];
 						cout << "\n clearing row: " << row << "\n";
@@ -74,7 +78,10 @@ void game::update()
 					}
 				}
 
+				renderer_.begin_draw();
 				renderer_.draw_world(world);
+				renderer_.show_score(score_);
+				renderer_.end_draw();
 				last_state_update_time = now;
 			}
 
@@ -86,7 +93,7 @@ void game::update()
 
 void game::handle_gravity()
 {
-	cout << "is flying tetromino landed: " << std::boolalpha << flying_tetromino.is_landed <<"\n";
+	//cout << "is flying tetromino landed: " << std::boolalpha << flying_tetromino.is_landed <<"\n";
 	if (world.is_position_valid(flying_tetromino, 0, 1))
 	{
 		flying_tetromino.shift_block_positions(0, 1);
@@ -130,9 +137,9 @@ tetromino game::generate_random_tetromino()
 {
 	tetromino tetromino1;
 	const auto rnd = rand();
-	cout << "random generated number: " << rnd;
-	const auto random_type = static_cast<tetromino_type>(rnd % last);
-	const auto random_color = static_cast<tetromino_color>(rnd % last_color);
+	//cout << "random generated number: " << rnd;
+	const auto random_type = tetromino_type::i;// static_cast<tetromino_type>(rnd % tetromino_type::last);
+	const auto random_color = static_cast<tetromino_color>(rnd % tetromino_color::last_color);
 	switch (random_type) {
 		case l:
 			tetromino1 = tetromino_L(random_color);
@@ -162,11 +169,11 @@ tetromino game::generate_random_tetromino()
 
 void game::spawn_tetromino()
 {
-	if (flying_tetromino.type == last || flying_tetromino.is_landed)
+	if (flying_tetromino.type == tetromino_type::last || flying_tetromino.is_landed)
 	{
 		flying_tetromino = generate_random_tetromino();
 		flying_tetromino.shift_block_positions(world.width / 2, 2);
 		world.put_tetromino_on_grid(flying_tetromino);
-		cout << "tetromino spawned: " << flying_tetromino.type;
+		//cout << "tetromino spawned: " << flying_tetromino.type;
 	}
 }
