@@ -138,7 +138,7 @@ tetromino game::generate_random_tetromino()
 	tetromino tetromino1;
 	const auto rnd = rand();
 	//cout << "random generated number: " << rnd;
-	const auto random_type = tetromino_type::i;// static_cast<tetromino_type>(rnd % tetromino_type::last);
+	const auto random_type = static_cast<tetromino_type>(rnd % tetromino_type::last);
 	const auto random_color = static_cast<tetromino_color>(rnd % tetromino_color::last_color);
 	switch (random_type) {
 		case l:
