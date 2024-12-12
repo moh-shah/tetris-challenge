@@ -7,24 +7,24 @@
 SDL_Renderer *sdl_renderer;
 SDL_Rect drawing_rct;
 SDL_Color color_white = {0xff, 0xff, 0xff};
-SDL_Color color_blue = {0x00, 0x00, 0xa0};
+SDL_Color color_empty = {0xff, 0xff, 0xff, 0x00};
 SDL_Color color_black = {0x00, 0x00, 0x00};
 SDL_Window *window;
 int invisible_height_margin = 4;
 int renderable_height;
 
-void
-draw_text_to_renderer(SDL_Renderer *renderer, const char *text, int size, int x, int y, SDL_Color fgC, SDL_Color bgC) {
+
+void draw_text_to_renderer(SDL_Renderer *renderer, const char *text, int size, int x, int y, SDL_Color color) {
     // Create the text surface using the existing drawText logic
-    //this is bullshit! make it fucking relative :D
-    TTF_Font *font = TTF_OpenFont(
-            R"(D:\Game\gameDev\Tetris Challenge\tetris in cpp\tetris in cpp\Assets\Fonts\VT323-Regular.ttf)", size);
+    //todo: this is bullshit! make it fucking relative :D
+    TTF_Font *font = TTF_OpenFont(R"(D:\Game\gameDev\Tetris Challenge\tetris in cpp\tetris in cpp\Assets\Fonts\VT323-Regular.ttf)", size);
     if (!font) {
         printf("[ERROR] TTF_OpenFont() Failed with: %s\n", TTF_GetError());
         exit(2);
     }
     TTF_SetFontStyle(font, TTF_STYLE_BOLD);
-    SDL_Surface *textSurface = TTF_RenderText_Shaded(font, text, fgC, bgC);
+    //SDL_Surface *textSurface = TTF_RenderText_Shaded(font, text, color, bgC);
+    SDL_Surface *textSurface = TTF_RenderText_Blended(font, text, color);
     if (!textSurface) {
         TTF_CloseFont(font);
         printf("[ERROR] TTF_RenderText_Shaded() Failed with: %s\n", TTF_GetError());
@@ -42,13 +42,13 @@ draw_text_to_renderer(SDL_Renderer *renderer, const char *text, int size, int x,
 
     // Query the texture to get its width and height
     int text_width, text_height;
-    SDL_QueryTexture(textTexture, NULL, NULL, &text_width, &text_height);
+    SDL_QueryTexture(textTexture, nullptr, nullptr, &text_width, &text_height);
 
     // Define the destination rectangle for the texture
     SDL_Rect dest_rect = {x, y, text_width, text_height};
 
     // Copy the texture to the renderer
-    SDL_RenderCopy(renderer, textTexture, NULL, &dest_rect);
+    SDL_RenderCopy(renderer, textTexture, nullptr, &dest_rect);
 
     // Clean up the texture and surface
     SDL_DestroyTexture(textTexture);
@@ -106,14 +106,15 @@ void renderer::show_side_rect_stuff(int score, tetromino next_tetromino) {
 
     auto string_score = "score: " + to_string(score);
     const char *score_char_array = string_score.c_str();
-    draw_text_to_renderer(sdl_renderer, score_char_array, 25, 20, 50, color_white, color_black);
+    draw_text_to_renderer(sdl_renderer, score_char_array, 25, 20, 50, color_white);
+
 
     //show next tetromino
     if (next_tetromino.type == last)
         return;
 
     const char *next_char_array = "next:";
-    draw_text_to_renderer(sdl_renderer, next_char_array, 25, 20, 80, color_white, color_black);
+    draw_text_to_renderer(sdl_renderer, next_char_array, 25, 20, 80, color_white);
 
     for (const auto &coord: next_tetromino.get_positions()) {
         draw_block(side_rect_width / 2 + coord[0] * small_cell_size,
@@ -124,12 +125,34 @@ void renderer::show_side_rect_stuff(int score, tetromino next_tetromino) {
     }
 }
 
+void renderer::show_game_result(int score) {
+    SDL_Rect rect;
+    rect.h = 200;
+    rect.w = 200;
+    rect.x = SDL_GetWindowSurface(window)->w / 2 - 100;
+    rect.y = SDL_GetWindowSurface(window)->h / 2 - 100;
+    SDL_SetRenderDrawColor(sdl_renderer, 255, 255, 255, 255);
+    SDL_RenderDrawRect(sdl_renderer, &rect);
+    rect.w = 199;
+    rect.h = 199;
+    SDL_SetRenderDrawColor(sdl_renderer, 106, 153, 115, 255);
+    SDL_RenderFillRect(sdl_renderer, &rect);
+
+    auto string_score = "score: " + to_string(score);
+    const char *score_char_array = string_score.c_str();
+    draw_text_to_renderer(
+            sdl_renderer,
+            score_char_array,
+            25,
+            SDL_GetWindowSurface(window)->w / 2 - 50,
+            SDL_GetWindowSurface(window)->h / 2,
+            color_white);
+}
 
 void renderer::end_draw() {
     SDL_SetRenderDrawColor(sdl_renderer, 0, 0, 0, 255);
     SDL_RenderPresent(sdl_renderer);
 }
-
 
 void renderer::get_color_of_cell(tetromino_color col, Uint8 &color_r, Uint8 &color_g, Uint8 &color_b) {
     color_r = 0;
@@ -156,10 +179,12 @@ void renderer::get_color_of_cell(tetromino_color col, Uint8 &color_r, Uint8 &col
 }
 
 void renderer::draw_cell(const int x, const int y, world_cell cell) {
-    if (cell.filled) {
-        draw_block(grid_margin_x + x * normal_cell_size, grid_margin_y + y * normal_cell_size, cell.color,
-                   normal_cell_size);
-    }
+    if (cell.filled)
+        draw_block(grid_margin_x + x * normal_cell_size,
+                   grid_margin_y + y * normal_cell_size,
+                   cell.color,
+                   normal_cell_size
+        );
 }
 
 void renderer::draw_block(int x, int y, tetromino_color color, int cell_size) {

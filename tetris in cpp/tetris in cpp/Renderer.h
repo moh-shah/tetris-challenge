@@ -8,6 +8,7 @@ public:
 	void end_draw();
 	void show_side_rect_stuff(int score, tetromino next_tetromino);
 	void draw_world(world_representation world);
+	void show_game_result(int score);
 	void get_color_of_cell(tetromino_color col, Uint8& color_r, Uint8& color_g, Uint8& color_b);
 
 private:

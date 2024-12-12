@@ -195,15 +195,11 @@ public:
 
     world_representation(int w, int h);
 
-    bool is_position_valid(tetromino tetromino, short diff_x, short diff_y);
+    bool can_move_to(tetromino tetromino, short diff_x, short diff_y);
 
     void put_tetromino_on_grid(tetromino tetromino);
 
     void clear_tetromino_from_grid(tetromino tetromino);
-
-    void fill_cell(int x, int y);
-
-    void clear_cell(int x, int y);
 
     vector<short> get_unique_and_sorted_rows_filled_by_tetromino(tetromino tetromino);
 
