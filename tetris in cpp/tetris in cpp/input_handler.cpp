@@ -15,9 +15,10 @@ void input_handler::read_and_cache_input_key()
 {
 	if (SDL_PollEvent(&key_press_event))
 	{
-		if (key_press_event.type == SDL_QUIT)
+		if (key_press_event.type == SDL_QUIT || key_press_event.key.keysym.sym == SDLK_ESCAPE)
 		{
 			key_quit_pressed_last_frame = true;
+            printf("exit pressed");
 		}
 		if (key_press_event.type == SDL_KEYDOWN)
 		{
@@ -43,7 +44,7 @@ void input_handler::read_and_cache_input_key()
 				key_q.push(Up);
 			}
 			
-			key_quit_pressed_last_frame = key_press_event.key.keysym.sym == SDLK_ESCAPE;
+			//key_quit_pressed_last_frame = key_press_event.key.keysym.sym == SDLK_ESCAPE;
 
 			//std::cout << "key pressed: " << key_press_event.key.keysym.sym <<"\n";
 		}

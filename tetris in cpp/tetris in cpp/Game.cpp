@@ -80,7 +80,7 @@ void game::update()
 
 				renderer_.begin_draw();
 				renderer_.draw_world(world);
-				renderer_.show_score(score_);
+                renderer_.show_side_rect_stuff(score_, next_tetromino);
 				renderer_.end_draw();
 				last_state_update_time = now;
 			}
@@ -107,6 +107,13 @@ void game::handle_gravity()
 
 void game::process_inputs()
 {
+    if (input_handler_.key_quit_pressed_last_frame)
+    {
+        exit_game_loop = true;
+        printf("exiting game loop");
+        return;
+    }
+
 	if (input_handler_.key_q.empty())
 		return;
 
@@ -129,8 +136,6 @@ void game::process_inputs()
 	}
 
 	input_handler_.key_q.pop();
-	if (input_handler_.key_quit_pressed_last_frame)
-		exit_game_loop = true;
 }
 
 tetromino game::generate_random_tetromino()
@@ -171,7 +176,10 @@ void game::spawn_tetromino()
 {
 	if (flying_tetromino.type == tetromino_type::last || flying_tetromino.is_landed)
 	{
-		flying_tetromino = generate_random_tetromino();
+        if (next_tetromino.type != last){
+		    flying_tetromino = next_tetromino;
+        }
+        next_tetromino = generate_random_tetromino();
 		flying_tetromino.shift_block_positions(world.width / 2, 2);
 		world.put_tetromino_on_grid(flying_tetromino);
 		//cout << "tetromino spawned: " << flying_tetromino.type;
