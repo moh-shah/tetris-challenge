@@ -21,7 +21,7 @@ const milliseconds desired_frame_time(33);//for 30 fps
 
 //tetris update-state delay
 time_point<steady_clock> last_state_update_time;
-milliseconds game_state_update_duration(10);//
+milliseconds game_state_update_duration(200);
 
 // This is a way to initialize member variables of a class directly in the constructor's parameter list.
 game::game() : world(10, 24), input_handler_() {
@@ -30,6 +30,9 @@ game::game() : world(10, 24), input_handler_() {
 }
 
 void game::start() {
+    audio_player_.init();
+    audio_player_.setup_device();
+    audio_player_.play_bgm();
     update();
 }
 
@@ -81,12 +84,12 @@ void game::update() {
                     }
                 }
 
-                renderer_.begin_draw();
+                renderer_.begin_drawing();
                 renderer_.draw_world(world);
                 renderer_.show_side_rect_stuff(score_, next_tetromino);
                 if (game_over_)
                     renderer_.show_game_result(score_);
-                renderer_.end_draw();
+                renderer_.end_drawing();
                 last_state_update_time = now;
             }
 
@@ -101,6 +104,7 @@ void game::handle_gravity() {
     //cout << "is flying tetromino landed: " << std::boolalpha << flying_tetromino.is_landed <<"\n";
     if (world.can_move_to(flying_tetromino, 0, 1)) {
         flying_tetromino.shift_block_positions(0, 1);
+        //audio_player_.play();
     } else {
         flying_tetromino.is_landed = true;
         cout << "tetromino landed \n --------------- \n";
@@ -126,6 +130,9 @@ void game::process_inputs() {
         if (world.can_move_to(flying_tetromino, -1, 0))
             flying_tetromino.shift_block_positions(-1, 0);
     } else if (peek == Up) {
+        if (flying_tetromino.type == o){
+            cout<<"";
+        }
         flying_tetromino.rotate(true);
         if (!world.can_move_to(flying_tetromino, 0, 0))
             flying_tetromino.rotate(false);
@@ -168,7 +175,7 @@ tetromino game::generate_random_tetromino() {
 }
 
 void game::spawn_tetromino() {
-    if (next_tetromino.type != last) {
+    if (next_tetromino.type != tetromino_type::last) {
         flying_tetromino = next_tetromino;
     }
     next_tetromino = generate_random_tetromino();

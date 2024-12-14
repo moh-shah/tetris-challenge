@@ -3,6 +3,7 @@
 #include "input_handler.h"
 #include "Renderer.h"
 #include "world_representation.h"
+#include "audio_player.h"
 
 class game
 {
@@ -14,6 +15,7 @@ public:
 
 private:
 	renderer renderer_;
+	audio_player audio_player_;
 	input_handler input_handler_;
 	void update();
 	void process_inputs();

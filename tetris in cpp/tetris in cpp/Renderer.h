@@ -4,8 +4,8 @@ class renderer
 {
 public:
 	void init(world_representation world);
-	void begin_draw();
-	void end_draw();
+	void begin_drawing();
+	void end_drawing();
 	void show_side_rect_stuff(int score, tetromino next_tetromino);
 	void draw_world(world_representation world);
 	void show_game_result(int score);

@@ -39,7 +39,7 @@ public:
         }
     }
 
-    void rotate(const bool clockwise) {
+    virtual void rotate(const bool clockwise) {
         //clockwise
         //new x = x*cos(90) - y*sin(90) = -y
         //new y = x*sin(90) + y*cos(90) = x
@@ -158,6 +158,10 @@ public:
         };
         type = o;
         pivot_index_ = 3;
+    }
+
+    void rotate(const bool clockwise) override{
+        std::cout<<"not rotating :D"<<endl;//not working
     }
 };
 
