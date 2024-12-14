@@ -1,5 +1,6 @@
 #include "renderer.h"
 #include <string>
+#include "persistent_data_manager.h"
 #include "SDL.h"
 #include "SDL_ttf.h"
 
@@ -143,7 +144,7 @@ void renderer::show_game_result(int score) {
             color_white);
 
     draw_text_to_renderer(
-            "best score: " + to_string(score),
+            "best score: " + to_string(persistent_data_manager::load().best_score),
             25,
             SDL_GetWindowSurface(window)->w / 2 - 80,
             SDL_GetWindowSurface(window)->h / 2,

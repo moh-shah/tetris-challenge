@@ -1,6 +1,7 @@
 #include "game.h"
 #include <thread>
 #include <cstdlib>
+#include "persistent_data_manager.h"
 
 using namespace std;
 using namespace chrono;
@@ -21,7 +22,7 @@ const milliseconds desired_frame_time(33);//for 30 fps
 
 //tetris update-state delay
 time_point<steady_clock> last_state_update_time;
-milliseconds game_state_update_duration(200);
+milliseconds game_state_update_duration(100);
 
 // This is a way to initialize member variables of a class directly in the constructor's parameter list.
 game::game() : world(10, 24), input_handler_() {
@@ -47,6 +48,7 @@ void game::update() {
             if (duration_cast<milliseconds>(now - last_state_update_time) >= game_state_update_duration) {
                 if (row_cleared_in_last_update) {
                     score_ += cleared_rows.size();
+                    persistent_data_manager::try_save(persistent_data(score_), false);
                     //for (int i = cleared_rows.size() - 1; i >= 0; --i)
                     for (int i = 0; i < cleared_rows.size(); i++) {
                         const auto row = cleared_rows[i];

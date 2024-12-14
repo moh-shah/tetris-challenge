@@ -159,6 +159,7 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="input_handler.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="persistent_data_manager.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="world_representation.cpp" />
   </ItemGroup>
@@ -166,6 +167,7 @@
     <ClInclude Include="audio_player.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="input_handler.h" />
+    <ClInclude Include="persistent_data_manager.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="world_representation.h" />
   </ItemGroup>

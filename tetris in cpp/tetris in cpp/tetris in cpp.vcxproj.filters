@@ -33,6 +33,9 @@
     <ClCompile Include="audio_player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="persistent_data_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="world_representation.h">
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="audio_player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="persistent_data_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
