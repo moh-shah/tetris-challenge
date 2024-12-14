@@ -31,7 +31,6 @@ game::game() : world(10, 24), input_handler_() {
 
 void game::start() {
     audio_player_.init();
-    audio_player_.setup_device();
     audio_player_.play_bgm();
     update();
 }

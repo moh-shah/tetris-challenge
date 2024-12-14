@@ -4,5 +4,5 @@ public:
     void init();
     void play_bgm();
 
-    void setup_device();
+    ~audio_player();
 };
