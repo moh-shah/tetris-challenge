@@ -16,9 +16,7 @@ int renderable_height;
 
 void draw_text_to_renderer(const string& text, int size, int x, int y, SDL_Color color) {
     // Create the text surface using the existing drawText logic
-    //todo: this is bullshit! make it fucking relative :D
-    TTF_Font *font = TTF_OpenFont(
-            R"(D:\Game\gameDev\Tetris Challenge\tetris in cpp\tetris in cpp\Assets\Fonts\VT323-Regular.ttf)", size);
+    TTF_Font *font = TTF_OpenFont(R"(.\Assets\Fonts\VT323-Regular.ttf)", size);
     if (!font) {
         printf("[ERROR] TTF_OpenFont() Failed with: %s\n", TTF_GetError());
         exit(2);

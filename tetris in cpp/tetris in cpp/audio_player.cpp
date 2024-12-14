@@ -7,7 +7,7 @@ static Uint8 *wave_start;
 static SDL_AudioSpec wav_spec; // the specs of our piece of music
 SDL_AudioDeviceID device;
 
-std::string file_path = R"(D:\Game\gameDev\Tetris Challenge\tetris in cpp\tetris in cpp\Assets\Sounds\bgm2.wav)";
+std::string file_path = R"(.\Assets\Sounds\bgm2.wav)";
 
 void audio_player::init() {
     wav_spec.samples = 44100;
